@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>vue3 长列表</title>
+        <script src="https://unpkg.com/vue@3.0.5/dist/vue.global.js"></script>
+
+        <style>
+            .container {
+                width: 100%;
+                max-height: 400px;
+                overflow-y: auto;
+            }
+            .box-wrap {
+                overflow: hidden;
+                position: relative;
+            }
+            .item {
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-bottom: 1px solid #f1f1f1;
+                line-height: 32px;
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="container" @scroll="listScroll" ref="listEl">
+                <ul :style="[{ height: totalHeight + 'px' }]" class="box-wrap">
+                    <li v-for="item in list" :key="item.value" class="item" :style="{ transform: `translateY(${item.position}px`}">
+                        {{ item.label }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const {
+            createApp,
+            reactive,
+            toRefs,
+            ref,
+            onMounted,
+            computed,
+            nextTick
+        } = Vue
+        const app = createApp({
+            setup() {
+                let longList = []
+                for (let i = 0; i < 100000; i++) {
+                    const value = `${
+                        i.toString(36)
+                    }${i}`;
+                    longList.push({value, label: value});
+                }
+
+                const state = reactive({listEl: ref(null), list: []});
+
+                // 每一项的高度
+                const itemHeight = 32;
+                // 总的高度
+                const totalHeight = computed(() => {
+                    return longList.length * itemHeight;
+                });
+
+                onMounted(() => {
+                    if (state.listEl) {
+                        nextTick(() => {
+                            methods.listScroll();
+                        });
+                    }
+                })
+
+                const methods = { 
+                    // 长列表
+                    listScroll() {
+                        let scrollTop = state.listEl.scrollTop;
+                        let height = state.listEl.clientHeight;
+                        // 获取到要截取数据的起点
+                        let startIndex = Math.floor(scrollTop / itemHeight);
+                        // 获取到要截取数据的终点
+                        let endIndex = Math.ceil((scrollTop + height) / itemHeight);
+                        let scrollPos = startIndex * itemHeight;
+                        state.list = longList.slice(startIndex, endIndex).map((it, i) => ({
+                            ...it,
+                            position: scrollPos + i * itemHeight
+                        }));
+                    }
+                }
+                return {
+                    ...toRefs(state),
+                    totalHeight,
+                    ... methods
+                }
+            }
+        })
+        app.mount('#app')
+    </script>
+
+</html>
