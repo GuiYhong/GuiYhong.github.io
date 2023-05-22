@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>vue3 长列表</title>
+        <script src="https://unpkg.com/vue@3.0.5/dist/vue.global.js"></script>
+
+        <style>
+            .title {
+                padding: 10px 0;
+                width: 100%;
+                text-align: center;
+                font-size: 15px;
+                font-weight: bold;
+            }
+            .title .month-btn {
+                padding: 0 10px;
+                margin: 0 15px;
+                font-weight: normal;
+                cursor: pointer;
+            }
+            .week {
+                padding: 10px 0;
+                display: flex;
+                justify-content: space-around;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.09);
+            }
+            .week .item {
+                flex: 1;
+                text-align: center;
+                font-size: 15px;
+            }
+            .days {
+                padding: 5px 0;
+                display: flex;
+                flex-wrap: wrap;
+                position: relative;
+
+            }
+            .days .item {
+                margin: 5px 0;
+                padding: 5px;
+                width: calc(100% / 7);
+                height: calc(100% / 7);
+                text-align: center;
+                line-height: 1;
+                box-sizing: border-box;
+                position: relative;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                font-size: 15px;
+                cursor: pointer;
+            }
+            .days .item .chinese-date-d {
+                margin-top: 2px;
+                font-size: 10px;
+                font-weight: 400;
+            }
+            .days .item.active-start,
+            .days .item.active-end,
+            .days .item.active-single,
+            .days .item.active-multiple {
+                color: #ffffff;
+                background-color: rgb(32, 201, 181);
+            }
+            .days .item.active-opacity {
+                color: #ffffff;
+                background-color: rgba(32, 201, 181, 0.4);
+            }
+            .days .watermark-month {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                font-size: 200px;
+                color: rgba(0, 0, 0, 0.09);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: -1;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="title">
+                <span class="month-btn" @click="monthHandle('minus')">{{ "<" }}</span>
+                {{ year + "年" + month + "月"
+                }}<span class="month-btn" @click="monthHandle('plus')">{{ ">" }}</span>
+            </div>
+            <div class="week">
+                <span v-for="item in weekArr" :key="item.value" class="item">{{ item.label }}</span>
+            </div>
+            <div class="days">
+                <span class="watermark-month">{{ month }}</span>
+                <span v-for="item in weekFirstDay" :key="item" class="item"></span>
+                <span v-for="item in days" :key="item.value" class="item" @click="itemClick(item)" :class="[
+                                                                                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                                                                                            'active-single': singleSelect.valueTmp == item.valueTmp,
+                                                                                                                                                                                                                                                                                                                            'active-start': selectStart.valueTmp == item.valueTmp,
+                                                                                                                                                                                                                                                                                                                            'active-end': selectEnd.valueTmp == item.valueTmp,
+                                                                                                                                                                                                                                                                                                                            'active-opacity':
+                                                                                                                                                                                                                                                                                                                                selectStart.valueTmp &&
+                                                                                                                                                                                                                                                                                                                                selectEnd.valueTmp &&
+                                                                                                                                                                                                                                                                                                                                selectStart.valueTmp < item.valueTmp &&
+                                                                                                                                                                                                                                                                                                                                item.valueTmp < selectEnd.valueTmp,
+                                                                                                                                                                                                                                                                                                                            'active-multiple':
+                                                                                                                                                                                                                                                                                                                                type == 'multiple' && activeMultipleCheck(item),
+                                                                                                                                                                                                                                                                                                                        },
+                                                                                                                                                                                                                                                                                                                    ]">
+                    <span>{{ item.showText }}</span>
+                    <span class="chinese-date-d">{{
+                        selectStart.valueTmp == item.valueTmp
+                            ? "开始"
+                            : selectEnd.valueTmp == item.valueTmp
+                            ? "结束"
+                            : item.chineseDate.d
+                    }}</span>
+                </span>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const {createApp, reactive, toRefs, computed} = Vue
+        const app = createApp({
+            setup() {
+                function GetQuery() {
+                    var url = location.search;
+                    var theRequest = {};
+                    if (url.indexOf("?") != -1) {
+                        var str = url.substr(1);
+                        strs = str.split("&");
+                        for (var i = 0; i < strs.length; i++) {
+                            theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
+                        }
+                    }
+                    return theRequest;
+                }
+                let date = new Date();
+                const state = reactive({
+                    year: date.getFullYear(),
+                    month: date.getMonth() + 1,
+                    day: date.getDate(),
+                    week: date.getDay(),
+                    selectStart: {},
+                    selectEnd: {},
+                    singleSelect: {},
+                    multipleSelect: [],
+                    type: GetQuery().type || 'single', // 选择类型: single 表示选择单个日期， multiple 表示选择多个日期， range 表示选择日期区间
+                    selectResult: ''
+                });
+                // 当前月总的天数
+                let days = computed(() => {
+                    let daysTotal = new Date(state.year, state.month, 0).getDate();
+                    let daysArr = [];
+                    for (let i = 0; i < daysTotal; i++) {
+                        let obj = {};
+                        obj.showText = i + 1;
+                        obj.value = `${
+                            state.year
+                        }-${
+                            state.month
+                        }-${
+                            i + 1
+                        }`;
+                        obj.valueTmp = new Date(obj.value).getTime();
+                        obj.chineseDate = methods.getChineseDate(obj.value);
+                        daysArr.push(obj);
+                    }
+                    return daysArr;
+                });
+                // 获取当前月第一天是周几
+                let weekFirstDay = computed(() => {
+                    return new Date(state.year, state.month - 1, 1).getDay();
+                });
+
+                const weekArr = [
+                    {
+                        value: 0,
+                        label: "日"
+                    },
+                    {
+                        value: 1,
+                        label: "一"
+                    },
+                    {
+                        value: 2,
+                        label: "二"
+                    },
+                    {
+                        value: 3,
+                        label: "三"
+                    }, {
+                        value: 4,
+                        label: "四"
+                    }, {
+                        value: 5,
+                        label: "五"
+                    }, {
+                        value: 6,
+                        label: "六"
+                    },
+                ];
+
+                const methods = {
+                    monthHandle(type) {
+                        if (type == "minus") {
+                            if (state.month == 1) {
+                                state.year --;
+                                state.month = 12;
+                            } else {
+                                state.month --;
+                            }
+                        }
+                        if (type == "plus") {
+                            if (state.month == 12) {
+                                state.year ++;
+                                state.month = 1;
+                            } else {
+                                state.month ++;
+                            }
+                        }
+                    },
+                    itemClick(item) {
+                        switch (state.type) {
+                            case "single": methods.singleClick(item);
+                                break;
+                            case "multiple": methods.multipleClick(item);
+                                break;
+                            case "range": methods.rangeClick(item);
+                                break;
+                        }
+                    },
+                    singleClick(item) {
+                        const curValueTmp = item.valueTmp;
+                        state.singleSelect = state.singleSelect.valueTmp == curValueTmp ? {} : item;
+                        state.selectResult = state.singleSelect
+                    },
+                    rangeClick(item) {
+                        const curValueTmp = item.valueTmp;
+                        const startValueTmp = state.selectStart.valueTmp || 0;
+                        const endValueTmp = state.selectEnd.valueTmp || 0;
+
+                        if (! startValueTmp) {
+                            state.selectStart = item;
+                        } else {
+                            if (! endValueTmp) {
+                                if (curValueTmp == startValueTmp) {
+                                    state.selectStart = {};
+                                } else if (curValueTmp > startValueTmp) {
+                                    state.selectEnd = item;
+                                } else {
+                                    state.selectStart = item;
+                                }
+                            } else {
+                                if (curValueTmp == startValueTmp) {
+                                    state.selectStart = {};
+                                    state.selectEnd = {};
+                                } else if (curValueTmp > startValueTmp) {
+                                    state.selectEnd = item;
+                                } else {
+                                    state.selectStart = item;
+                                }
+                            }
+                        }
+                        if (state.selectEnd.valueTmp && state.selectStart.valueTmp) {
+                            let selectArr = []
+                            days.value.forEach(item => {
+                                if (item.valueTmp<state.selectEnd.valueTmp && item.valueTmp>state.selectStart.valueTmp) {
+                                    selectArr.push(item)
+                                }
+                            })
+                            selectArr = [
+                                state.selectStart,
+                                ... selectArr,
+                                state.selectEnd
+                            ]
+                            state.selectResult = selectArr
+                        } else {
+                            state.selectResult = []
+                        }
+                    },
+                    multipleClick(item) {
+                        const curValueTmp = item.valueTmp;
+                        if (! state.multipleSelect.length) {
+                            state.multipleSelect.push(item);
+                        } else {
+                            let index = state.multipleSelect.findIndex((item) => item.valueTmp == curValueTmp);
+                            if (index == -1) {
+                                state.multipleSelect.push(item);
+                            } else {
+                                state.multipleSelect.splice(index, 1);
+                            }
+                        } state.selectResult = state.multipleSelect
+                    },
+                    activeMultipleCheck(item) {
+                        if (! state.multipleSelect.length) {
+                            return false;
+                        } else {
+                            const curValueTmp = item.valueTmp;
+                            let index = state.multipleSelect.findIndex((item) => item.valueTmp == curValueTmp);
+                            if (index == -1) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                    },
+                    // 农历
+                    getChineseDate(time) {
+                        let date = time ? new Date(time) : new Date();
+                        let dateString = date.toLocaleString("zh-CN-u-ca-chinese");
+                        dateString = dateString.replace(/(\d+)\s*?年/, (x, y) => {
+                            let result = "";
+                            result = "甲乙丙丁戊己庚辛壬癸".charAt((y - 4) % 10); // 天干
+                            result += "子丑寅卯辰巳午未申酉戌亥".charAt((y - 4) % 12); // 地支
+                            return result;
+                        });
+                        dateString = dateString.split(" ")[0]; // 取年月日
+                        let g = dateString.substr(0, 2) + "年";
+                        let m = dateString.substring(2, dateString.match("月").index) + "月";
+                        let d = dateString.match(/\d+/)[0];
+                        if (d == 1) {
+                            d = m;
+                        } else {
+                            d = d < 11 ? "初" + methods.numberToString(d) : methods.numberToString(d);
+                        }
+
+                        let animals = [
+                            "猴",
+                            "鸡",
+                            "狗",
+                            "猪",
+                            "鼠",
+                            "牛",
+                            "虎",
+                            "兔",
+                            "龙",
+                            "蛇",
+                            "马",
+                            "羊",
+                        ];
+                        let index = date.toLocaleString("zh-CN-u-ca-chinese").substr(0, 4) % 12;
+                        let a = animals[index];
+                        return {
+                            g, // 干支
+                            m, // 月
+                            d, // 日
+                            a, // 生肖
+                        };
+                    },
+                    numberToString(number) {
+                        if (number.match(/\D/) || number.length >= 14) 
+                            return;
+                        
+
+
+                        let zhArray = [
+                            "零",
+                            "一",
+                            "二",
+                            "三",
+                            "四",
+                            "五",
+                            "六",
+                            "七",
+                            "八",
+                            "九",
+                            "十",
+                        ]; // 数字对应中文
+                        let baseArray = [
+                            "",
+                            "十",
+                            "百",
+                            "千",
+                            "万",
+                            "十",
+                            "百",
+                            "千",
+                            "亿",
+                            "十",
+                            "百",
+                            "千",
+                            "万",
+                        ]; // 进位填充字符，第一位是 个位，可省略
+                        let string = String(number).split("").reverse().map((item, index) => {
+                            // 把数字切割成数组并倒序排列，然后进行遍历转成中文
+                            // 如果当前位为0，直接输出数字， 否则输出 数字 + 进位填充字符
+                            item = Number(item) == 0 ? zhArray[Number(item)] : zhArray[Number(item)] + baseArray[index];
+                            return item;
+                        }).reverse().join(""); // 倒叙回来数组，拼接成字符串
+                        string = string.replace(/^一十/, "十"); // 如果以 一十 开头，可省略一
+                        string = string.replace(/零+/, "零"); // 如果有多位相邻的零，只写一个即可
+                        if (string.indexOf("十") != -1 && string.indexOf("零") != -1) {
+                            string = string.replace(/零/, "");
+                        }
+                        return string;
+                    }
+                };
+                return {
+                    weekArr,
+                    ...toRefs(state),
+                    days,
+                    weekFirstDay,
+                    ... methods
+                };
+            }
+        })
+        app.mount('#app')
+    </script>
+
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="选择单个日期   选择多个日期  选择日期区间  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue 简单日历">
+<meta property="og:url" content="http://example.com/calendar/index.html">
+<meta property="og:site_name" content="Hong">
+<meta property="og:description" content="选择单个日期   选择多个日期  选择日期区间  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-05-22T07:34:13.971Z">
+<meta property="article:modified_time" content="2023-05-22T07:58:18.679Z">
+<meta property="article:author" content="Hong">
+<meta name="twitter:card" content="summary">
+
+    <meta name="keywords" content="vue, js">
+
+
+<title >vue 简单日历</title>
+
+<!-- Favicon -->
+
+    <link href='/static/image/avatar.jpg?v=2.0.4' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/static/image/avatar.jpg?v=2.0.4' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+    <link href='/apple-touch-icon.png?v=2.0.4' rel='apple-touch-icon' sizes='180x180' ></link>
+
+
+    <link href='/site.webmanifest' rel='manifest' ></link>
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+
+    
+<link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+    
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"example.com","author":"Hong","root":"/","typed_text":["Web Developer"],"theme_version":"2.0.4","theme":{"switch":false,"default":"style-dark"},"favicon":{"logo":"","icon16":"/static/image/avatar.jpg","icon32":"/static/image/avatar.jpg","appleTouchIcon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","showText":"(/≧▽≦/)","hideText":"(●—●)"},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://unpkg.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"far fa-sun","moon":"far fa-moon","play":"fas fa-play","email":"far fa-envelope","next":"fas fa-arrow-right","calendar":"far fa-calendar-alt","clock":"far fa-clock","user":"far fa-user","back_top":"fas fa-arrow-up","close":"fas fa-times","search":"fas fa-search","reward":"fas fa-hand-holding-usd","user_tag":"fas fa-user-alt","toc_tag":"fas fa-th-list","read":"fas fa-book-reader","arrows":"fas fa-arrows-alt-h","double_arrows":"fas fa-angle-double-down","copy":"fas fa-copy"},"icontype":"font","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":true,"title":"default","height_limit":false},"search":{"enable":true,"type":"local","href":"https://www.google.com/search?q=site:","domain":null,"path":"search.xml"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2023-05-22 15:58:18"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.0.4" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+ 
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><i class="iconfont far fa-sun"></i></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><i class="iconfont far fa-moon"></i></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" data-scroll-container style="opacity: 0">
+          <div data-scroll-section id="content" class="trm-scroll-section">
+
+            <div class="locomotive-scroll__sticky-target" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none;"></div>
+
+            <!-- top bar -->
+            <header class="trm-top-bar" data-scroll data-scroll-sticky data-scroll-target=".locomotive-scroll__sticky-target" data-scroll-offset="-10">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    首页
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="#" target="">
+                    收藏
+                </a>
+                
+                <ul>
+                    
+                    <li>
+                        <a  href="/collect/css/" target="">
+                            css
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a  href="/collect/js/" target="">
+                            js
+                        </a>
+                    </li>
+                    
+                </ul>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+			
+    
+    <div id="trm-search-btn" class="trm-search-btn">
+        <i class="iconfont fas fa-search"></i>
+    </div>
+     
+
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner" data-scroll data-scroll-direction="vertical">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" data-scroll data-scroll-direction="vertical" data-scroll-speed="-3" src="/img/banner.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container" data-scroll data-scroll-direction="vertical" data-scroll-speed="0">
+            <div class="row">
+                
+                <div class="col-lg-12">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text trm-text-center ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            vue 简单日历
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        calendar
+                                    </span
+                                ></li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <a href="#about-triger" data-scroll-to="#about-triger" data-scroll-offset="-130" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </a>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+            <div id="page-content" class="col-lg-12">
+                <div class="trm-content" id="trm-content">
+                    <div data-scroll data-scroll-repeat data-scroll-offset="500" id="about-triger"></div>
+
+                    <div id="post-info" class="row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-calendar-alt trm-icon"></i><br>
+            05/22
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-clock trm-icon"></i><br>
+            15:34
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-user trm-icon"></i><br>
+            Hong
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <h2 id="选择单个日期"><a href="#选择单个日期" class="headerlink" title="选择单个日期"></a>选择单个日期</h2><iframe src="/pages/calendar.html?type=single" style="width: 100%; height: 420px; background: #ffffff; margin-top: 20px; border:none; "></iframe> 
+
+<h2 id="选择多个日期"><a href="#选择多个日期" class="headerlink" title="选择多个日期"></a>选择多个日期</h2><iframe src="/pages/calendar.html?type=multiple" style="width: 100%; height: 420px; background: #ffffff; margin-top: 20px; border:none; "></iframe>
+
+<h2 id="选择日期区间"><a href="#选择日期区间" class="headerlink" title="选择日期区间"></a>选择日期区间</h2><iframe src="/pages/calendar.html?type=range" style="width: 100%; height: 420px; background: #ffffff; margin-top: 20px; border:none; "></iframe>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">	&lt;div&gt;</span><br><span class="line">		&lt;div class=&quot;title&quot;&gt;</span><br><span class="line">			&lt;span</span><br><span class="line">				class=&quot;month-btn&quot;</span><br><span class="line">				@click=&quot;monthHandle(&#x27;minus&#x27;)&quot;</span><br><span class="line">				&gt;&#123;&#123; &quot;&lt;&quot; &#125;&#125;&lt;/span</span><br><span class="line">			&gt;&#123;&#123; year + &quot;年&quot; + month + &quot;月&quot;</span><br><span class="line">			&#125;&#125;&lt;span</span><br><span class="line">				class=&quot;month-btn&quot;</span><br><span class="line">				@click=&quot;monthHandle(&#x27;plus&#x27;)&quot;</span><br><span class="line">				&gt;&#123;&#123; &quot;&gt;&quot; &#125;&#125;&lt;/span</span><br><span class="line">			&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">		&lt;div class=&quot;week&quot;&gt;</span><br><span class="line">			&lt;span</span><br><span class="line">				v-for=&quot;item in weekArr&quot;</span><br><span class="line">				:key=&quot;item.value&quot;</span><br><span class="line">				class=&quot;item&quot;</span><br><span class="line">				&gt;&#123;&#123; item.label &#125;&#125;&lt;/span</span><br><span class="line">			&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">		&lt;div class=&quot;days&quot;&gt;</span><br><span class="line">			&lt;span class=&quot;watermark-month&quot;&gt;&#123;&#123; month &#125;&#125;&lt;/span&gt;</span><br><span class="line">			&lt;span</span><br><span class="line">				v-for=&quot;item in weekFirstDay&quot;</span><br><span class="line">				:key=&quot;item&quot;</span><br><span class="line">				class=&quot;item&quot;&gt;&lt;/span&gt;</span><br><span class="line">			&lt;span</span><br><span class="line">				v-for=&quot;item in days&quot;</span><br><span class="line">				:key=&quot;item.value&quot;</span><br><span class="line">				class=&quot;item&quot;</span><br><span class="line">				@click=&quot;itemClick(item)&quot;</span><br><span class="line">				:class=&quot;[</span><br><span class="line">					&#123;</span><br><span class="line">						&#x27;active-single&#x27;: singleSelect.valueTmp == item.valueTmp,</span><br><span class="line">						&#x27;active-start&#x27;: selectStart.valueTmp == item.valueTmp,</span><br><span class="line">						&#x27;active-end&#x27;: selectEnd.valueTmp == item.valueTmp,</span><br><span class="line">						&#x27;active-opacity&#x27;:</span><br><span class="line">							selectStart.valueTmp &amp;&amp;</span><br><span class="line">							selectEnd.valueTmp &amp;&amp;</span><br><span class="line">							selectStart.valueTmp &lt; item.valueTmp &amp;&amp;</span><br><span class="line">							item.valueTmp &lt; selectEnd.valueTmp,</span><br><span class="line">						&#x27;active-multiple&#x27;:</span><br><span class="line">							type == &#x27;multiple&#x27; &amp;&amp; activeMultipleCheck(item),</span><br><span class="line">					&#125;,</span><br><span class="line">				]&quot;</span><br><span class="line">				&gt;&lt;span&gt;&#123;&#123; item.showText &#125;&#125;&lt;/span</span><br><span class="line">				&gt;&lt;span class=&quot;chinese-date-d&quot;&gt;&#123;&#123;</span><br><span class="line">					selectStart.valueTmp == item.valueTmp</span><br><span class="line">						? &quot;开始&quot;</span><br><span class="line">						: selectEnd.valueTmp == item.valueTmp</span><br><span class="line">						? &quot;结束&quot;</span><br><span class="line">						: item.chineseDate.d</span><br><span class="line">				&#125;&#125;&lt;/span&gt;&lt;/span</span><br><span class="line">			&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">import props from &quot;./props.js&quot;; </span><br><span class="line">import &#123; reactive, toRefs, computed &#125; from &quot;vue&quot;; </span><br><span class="line">export default &#123;</span><br><span class="line"></span><br><span class="line">	name: &quot;calendar&quot;,</span><br><span class="line">	// 子组件中通过emits注册自定义事件</span><br><span class="line">	emits: [&quot;change&quot;],</span><br><span class="line">	props: &#123;</span><br><span class="line">        /* </span><br><span class="line">            选择类型:</span><br><span class="line">            single 表示选择单个日期，</span><br><span class="line">            multiple 表示选择多个日期，</span><br><span class="line">            range 表示选择日期区间</span><br><span class="line">        */</span><br><span class="line">        type: &#123;</span><br><span class="line">            type: String,</span><br><span class="line">            default: &#x27;single&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">	setup(props, &#123; emit &#125;) &#123;</span><br><span class="line">		let date = new Date();</span><br><span class="line">		const state = reactive(&#123;</span><br><span class="line">			year: date.getFullYear(),</span><br><span class="line">			month: date.getMonth() + 1,</span><br><span class="line">			day: date.getDate(),</span><br><span class="line">			week: date.getDay(),</span><br><span class="line">			selectStart: &#123;&#125;,</span><br><span class="line">			selectEnd: &#123;&#125;,</span><br><span class="line">			singleSelect: &#123;&#125;,</span><br><span class="line">			multipleSelect: [],</span><br><span class="line">		&#125;);</span><br><span class="line">		// 当前月总的天数</span><br><span class="line">		let days = computed(() =&gt; &#123;</span><br><span class="line">			let daysTotal = new Date(state.year, state.month, 0).getDate();</span><br><span class="line">			let daysArr = [];</span><br><span class="line">			for (let i = 0; i &lt; daysTotal; i++) &#123;</span><br><span class="line">				let obj = &#123;&#125;;</span><br><span class="line">				obj.showText = i + 1;</span><br><span class="line">				obj.value = `$&#123;state.year&#125;-$&#123;state.month&#125;-$&#123;i + 1&#125;` ;</span><br><span class="line">				obj.valueTmp = new Date(obj.value).getTime();</span><br><span class="line">				obj.chineseDate = methods.getChineseDate(obj.value);</span><br><span class="line">				daysArr.push(obj);</span><br><span class="line">			&#125;</span><br><span class="line">			return daysArr;</span><br><span class="line">		&#125;);</span><br><span class="line">		// 获取当前月第一天是周几</span><br><span class="line">		let weekFirstDay = computed(() =&gt; &#123;</span><br><span class="line">			return new Date(state.year, state.month - 1, 1).getDay();</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		const weekArr = [</span><br><span class="line">			&#123;</span><br><span class="line">				value: 0,</span><br><span class="line">				label: &quot;日&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				value: 1,</span><br><span class="line">				label: &quot;一&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				value: 2,</span><br><span class="line">				label: &quot;二&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				value: 3,</span><br><span class="line">				label: &quot;三&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				value: 4,</span><br><span class="line">				label: &quot;四&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				value: 5,</span><br><span class="line">				label: &quot;五&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">			&#123;</span><br><span class="line">				value: 6,</span><br><span class="line">				label: &quot;六&quot;,</span><br><span class="line">			&#125;,</span><br><span class="line">		];</span><br><span class="line"></span><br><span class="line">		const methods = &#123;</span><br><span class="line">			monthHandle(type) &#123;</span><br><span class="line">				if (type == &quot;minus&quot;) &#123;</span><br><span class="line">					if (state.month == 1) &#123;</span><br><span class="line">						state.year--;</span><br><span class="line">						state.month = 12;</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						state.month--;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				if (type == &quot;plus&quot;) &#123;</span><br><span class="line">					if (state.month == 12) &#123;</span><br><span class="line">						state.year++;</span><br><span class="line">						state.month = 1;</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						state.month++;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			itemClick(item) &#123;</span><br><span class="line">				switch (props.type) &#123;</span><br><span class="line">					case &quot;single&quot;:</span><br><span class="line">						methods.singleClick(item);</span><br><span class="line">						break;</span><br><span class="line">					case &quot;multiple&quot;:</span><br><span class="line">						methods.multipleClick(item);</span><br><span class="line">						break;</span><br><span class="line">					case &quot;range&quot;:</span><br><span class="line">						methods.rangeClick(item);</span><br><span class="line">						break;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			singleClick(item) &#123;</span><br><span class="line">				const curValueTmp = item.valueTmp;</span><br><span class="line">				state.singleSelect =</span><br><span class="line">					state.singleSelect.valueTmp == curValueTmp ? &#123;&#125; : item;</span><br><span class="line">                emit(&#x27;change&#x27;,state.singleSelect)</span><br><span class="line">			&#125;,</span><br><span class="line">			rangeClick(item) &#123;</span><br><span class="line">				const curValueTmp = item.valueTmp;</span><br><span class="line">				const startValueTmp = state.selectStart.valueTmp || 0;</span><br><span class="line">				const endValueTmp = state.selectEnd.valueTmp || 0;</span><br><span class="line"></span><br><span class="line">				if (!startValueTmp) &#123;</span><br><span class="line">					state.selectStart = item;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					if (!endValueTmp) &#123;</span><br><span class="line">						if (curValueTmp == startValueTmp) &#123;</span><br><span class="line">							state.selectStart = &#123;&#125;;</span><br><span class="line">						&#125; else if (curValueTmp &gt; startValueTmp) &#123;</span><br><span class="line">							state.selectEnd = item;</span><br><span class="line">						&#125; else &#123;</span><br><span class="line">							state.selectStart = item;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						if (curValueTmp == startValueTmp) &#123;</span><br><span class="line">							state.selectStart = &#123;&#125;;</span><br><span class="line">							state.selectEnd = &#123;&#125;;</span><br><span class="line">						&#125; else if (curValueTmp &gt; startValueTmp) &#123;</span><br><span class="line">							state.selectEnd = item;</span><br><span class="line">						&#125; else &#123;</span><br><span class="line">							state.selectStart = item;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">                if(state.selectEnd.valueTmp &amp;&amp; state.selectStart.valueTmp) &#123;</span><br><span class="line">                    let selectArr = []</span><br><span class="line">                    days.value.forEach(item =&gt; &#123;</span><br><span class="line">                        if(item.valueTmp &lt; state.selectEnd.valueTmp &amp;&amp; item.valueTmp &gt; state.selectStart.valueTmp) &#123;</span><br><span class="line">                            selectArr.push(item) </span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;)</span><br><span class="line">                    selectArr = [state.selectStart,...selectArr,state.selectEnd]</span><br><span class="line">                    emit(&#x27;change&#x27;,selectArr)</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    emit(&#x27;change&#x27;,[])</span><br><span class="line">                &#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			multipleClick(item) &#123;</span><br><span class="line">				const curValueTmp = item.valueTmp;</span><br><span class="line">				if (!state.multipleSelect.length) &#123;</span><br><span class="line">					state.multipleSelect.push(item);</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					let index = state.multipleSelect.findIndex(</span><br><span class="line">						(item) =&gt; item.valueTmp == curValueTmp</span><br><span class="line">					);</span><br><span class="line">					if (index == -1) &#123;</span><br><span class="line">						state.multipleSelect.push(item);</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						state.multipleSelect.splice(index, 1);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">                emit(&#x27;change&#x27;,state.multipleSelect)</span><br><span class="line">			&#125;,</span><br><span class="line">			activeMultipleCheck(item) &#123;</span><br><span class="line">				if (!state.multipleSelect.length) &#123;</span><br><span class="line">					return false;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					const curValueTmp = item.valueTmp;</span><br><span class="line">					let index = state.multipleSelect.findIndex(</span><br><span class="line">						(item) =&gt; item.valueTmp == curValueTmp</span><br><span class="line">					);</span><br><span class="line">					if (index == -1) &#123;</span><br><span class="line">						return false;</span><br><span class="line">					&#125; else &#123;</span><br><span class="line">						return true;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			// 农历</span><br><span class="line">			getChineseDate(time) &#123;</span><br><span class="line">				let date = time ? new Date(time) : new Date();</span><br><span class="line">				let dateString = date.toLocaleString(&quot;zh-CN-u-ca-chinese&quot;);</span><br><span class="line">				dateString = dateString.replace(/(\d+)\s*?年/, (x, y) =&gt; &#123;</span><br><span class="line">					let result = &quot;&quot;;</span><br><span class="line">					result = &quot;甲乙丙丁戊己庚辛壬癸&quot;.charAt((y - 4) % 10); // 天干</span><br><span class="line">					result += &quot;子丑寅卯辰巳午未申酉戌亥&quot;.charAt((y - 4) % 12); // 地支</span><br><span class="line">					return result;</span><br><span class="line">				&#125;);</span><br><span class="line">				dateString = dateString.split(&quot; &quot;)[0]; // 取年月日</span><br><span class="line">				let g = dateString.substr(0, 2) + &quot;年&quot;;</span><br><span class="line">				let m =</span><br><span class="line">					dateString.substring(2, dateString.match(&quot;月&quot;).index) +</span><br><span class="line">					&quot;月&quot;;</span><br><span class="line">				let d = dateString.match(/\d+/)[0];</span><br><span class="line">				if (d == 1) &#123;</span><br><span class="line">					d = m;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					d =</span><br><span class="line">						d &lt; 11</span><br><span class="line">							? &quot;初&quot; + methods.numberToString(d)</span><br><span class="line">							: methods.numberToString(d);</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				let animals = [</span><br><span class="line">					&quot;猴&quot;,</span><br><span class="line">					&quot;鸡&quot;,</span><br><span class="line">					&quot;狗&quot;,</span><br><span class="line">					&quot;猪&quot;,</span><br><span class="line">					&quot;鼠&quot;,</span><br><span class="line">					&quot;牛&quot;,</span><br><span class="line">					&quot;虎&quot;,</span><br><span class="line">					&quot;兔&quot;,</span><br><span class="line">					&quot;龙&quot;,</span><br><span class="line">					&quot;蛇&quot;,</span><br><span class="line">					&quot;马&quot;,</span><br><span class="line">					&quot;羊&quot;,</span><br><span class="line">				];</span><br><span class="line">				let index =</span><br><span class="line">					date.toLocaleString(&quot;zh-CN-u-ca-chinese&quot;).substr(0, 4) % 12;</span><br><span class="line">				let a = animals[index];</span><br><span class="line">				return &#123;</span><br><span class="line">					g, // 干支</span><br><span class="line">					m, // 月</span><br><span class="line">					d, // 日</span><br><span class="line">					a, // 生肖</span><br><span class="line">				&#125;;</span><br><span class="line">			&#125;,</span><br><span class="line">			numberToString(number) &#123;</span><br><span class="line">				if (number.match(/\D/) || number.length &gt;= 14) return;</span><br><span class="line">				let zhArray = [</span><br><span class="line">					&quot;零&quot;,</span><br><span class="line">					&quot;一&quot;,</span><br><span class="line">					&quot;二&quot;,</span><br><span class="line">					&quot;三&quot;,</span><br><span class="line">					&quot;四&quot;,</span><br><span class="line">					&quot;五&quot;,</span><br><span class="line">					&quot;六&quot;,</span><br><span class="line">					&quot;七&quot;,</span><br><span class="line">					&quot;八&quot;,</span><br><span class="line">					&quot;九&quot;,</span><br><span class="line">					&quot;十&quot;,</span><br><span class="line">				]; // 数字对应中文</span><br><span class="line">				let baseArray = [</span><br><span class="line">					&quot;&quot;,</span><br><span class="line">					&quot;十&quot;,</span><br><span class="line">					&quot;百&quot;,</span><br><span class="line">					&quot;千&quot;,</span><br><span class="line">					&quot;万&quot;,</span><br><span class="line">					&quot;十&quot;,</span><br><span class="line">					&quot;百&quot;,</span><br><span class="line">					&quot;千&quot;,</span><br><span class="line">					&quot;亿&quot;,</span><br><span class="line">					&quot;十&quot;,</span><br><span class="line">					&quot;百&quot;,</span><br><span class="line">					&quot;千&quot;,</span><br><span class="line">					&quot;万&quot;,</span><br><span class="line">				]; //进位填充字符，第一位是 个位，可省略</span><br><span class="line">				let string = String(number)</span><br><span class="line">					.split(&quot;&quot;)</span><br><span class="line">					.reverse()</span><br><span class="line">					.map((item, index) =&gt; &#123;</span><br><span class="line">						// 把数字切割成数组并倒序排列，然后进行遍历转成中文</span><br><span class="line">						// 如果当前位为0，直接输出数字， 否则输出 数字 + 进位填充字符</span><br><span class="line">						item =</span><br><span class="line">							Number(item) == 0</span><br><span class="line">								? zhArray[Number(item)]</span><br><span class="line">								: zhArray[Number(item)] + baseArray[index];</span><br><span class="line">						return item;</span><br><span class="line">					&#125;)</span><br><span class="line">					.reverse()</span><br><span class="line">					.join(&quot;&quot;); // 倒叙回来数组，拼接成字符串</span><br><span class="line">				string = string.replace(/^一十/, &quot;十&quot;); // 如果以 一十 开头，可省略一</span><br><span class="line">				string = string.replace(/零+/, &quot;零&quot;); // 如果有多位相邻的零，只写一个即可</span><br><span class="line">				if (string.indexOf(&quot;十&quot;) != -1 &amp;&amp; string.indexOf(&quot;零&quot;) != -1) &#123;</span><br><span class="line">					string = string.replace(/零/, &quot;&quot;);</span><br><span class="line">				&#125;</span><br><span class="line">				return string;</span><br><span class="line">			&#125;,</span><br><span class="line">		&#125;;</span><br><span class="line">		return &#123;</span><br><span class="line">			weekArr,</span><br><span class="line">			...toRefs(state),</span><br><span class="line">			days,</span><br><span class="line">			weekFirstDay,</span><br><span class="line">			...methods,</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;,</span><br><span class="line"></span><br><span class="line">&#125;; </span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped lang=&quot;scss&quot;&gt;</span><br><span class="line">.title &#123;</span><br><span class="line"></span><br><span class="line">	padding: 20px 0;</span><br><span class="line">	width: 100%;</span><br><span class="line">	text-align: center;</span><br><span class="line">	font-size: 30px;</span><br><span class="line">	font-weight: bold;</span><br><span class="line">	.month-btn &#123;</span><br><span class="line">		padding: 0 20px;</span><br><span class="line">		margin: 0 30px;</span><br><span class="line">		font-weight: normal;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">.week &#123;</span><br><span class="line"></span><br><span class="line">	padding: 20px 0;</span><br><span class="line">	display: flex;</span><br><span class="line">	justify-content: space-around;</span><br><span class="line">	box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.09);</span><br><span class="line">	.item &#123;</span><br><span class="line">		flex: 1;</span><br><span class="line">		text-align: center;</span><br><span class="line">		font-size: 30px;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">.days &#123;</span><br><span class="line"></span><br><span class="line">	padding: 10px 0;</span><br><span class="line">	display: flex;</span><br><span class="line">	flex-wrap: wrap;</span><br><span class="line">	position: relative;</span><br><span class="line">	.item &#123;</span><br><span class="line">		margin: 10px 0;</span><br><span class="line">		padding: 10px;</span><br><span class="line">		width: calc(100% / 7);</span><br><span class="line">		height: calc(100vw / 7);</span><br><span class="line">		text-align: center;</span><br><span class="line">		line-height: 1;</span><br><span class="line">		box-sizing: border-box;</span><br><span class="line">		position: relative;</span><br><span class="line">		z-index: 1;</span><br><span class="line">		display: flex;</span><br><span class="line">		align-items: center;</span><br><span class="line">		justify-content: center;</span><br><span class="line">		flex-direction: column;</span><br><span class="line">		font-size: 30px;</span><br><span class="line">		.chinese-date-d &#123;</span><br><span class="line">			margin-top: 4px;</span><br><span class="line">			font-size: 20px;</span><br><span class="line">			font-weight: 400;</span><br><span class="line">		&#125;</span><br><span class="line">		&amp;.active-start,</span><br><span class="line">		&amp;.active-end,</span><br><span class="line">		&amp;.active-single,</span><br><span class="line">		&amp;.active-multiple &#123;</span><br><span class="line">			color: #ffffff;</span><br><span class="line">			background-color: rgb(32, 201, 181);</span><br><span class="line">		&#125;</span><br><span class="line">		&amp;.active-opacity &#123;</span><br><span class="line">			color: #ffffff;</span><br><span class="line">			background-color: rgba(32, 201, 181, 0.4);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	.watermark-month &#123;</span><br><span class="line">		position: absolute;</span><br><span class="line">		top: 0;</span><br><span class="line">		left: 0;</span><br><span class="line">		right: 0;</span><br><span class="line">		bottom: 0;</span><br><span class="line">		font-size: 400px;</span><br><span class="line">		color: rgba(0, 0, 0, 0.09);</span><br><span class="line">		display: flex;</span><br><span class="line">		align-items: center;</span><br><span class="line">		justify-content: center;</span><br><span class="line">		z-index: -1;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</article>
+    
+    
+</div>
+<div id="post-next-prev" class="row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            其他文章
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
+        <a href="/vue3+vite+vant/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="/img/block.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" #.">
+                    未分类
+                </a>
+            </div>
+            <h5>
+                <a href="/vue3+vite+vant/" class="trm-anima-link">
+                    vue3+vite+vant搭建项目
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>23/03/30</li>
+                <li>17:43</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</div>
+
+    
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-scroll-animation" data-scroll data-scroll-offset="50">
+
+    
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.3.0
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                主题 - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.0.4
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+ 
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            <div class="trm-fixed-container" data-scroll data-scroll-sticky data-scroll-target=".locomotive-scroll__sticky-target" data-scroll-offset="-10">
+    
+        <div class="trm-fixed-btn" data-title="阅读模式" onclick="asyncFun.switchReadMode()">
+            <i class="iconfont fas fa-book-reader"></i>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="回到顶部">
+        <i class="iconfont fas fa-arrow-up"></i>
+    </div>
+</div>
+          </div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+
+  </div>
+  <!-- app wrapper end -->
+
+  
+<div class="trm-search-popup">
+    <div class="trm-search-header">
+        <span class="trm-search-popup-btn-close">
+            <i class="iconfont fas fa-times"></i>
+        </span>
+    </div>
+    <div class="form trm-search-form">
+        <input class="trm-search-input" type="text" placeholder="搜索...">
+    </div>
+    <div class="trm-search-result-container">
+
+    </div>
+</div>
+
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+
+    
+<script src="https://unpkg.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.0.4"></script>
+    
+
+    
+        
+<script src="https://unpkg.com/hexo-generator-searchdb@1.4.0/dist/search.js"></script>
+
+        <script src="/js/plugins/local_search.js?v=2.0.4"></script>
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+
+
+<script id="async-script" src="/js/main.js?v=2.0.4"></script>
+
+</body>
+
+</html>
